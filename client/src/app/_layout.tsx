@@ -17,7 +17,6 @@ export default function Layout() {
   return (
     <SafeAreaView className="flex-1">
       <StatusBar backgroundColor={"white"} barStyle="dark-content" />
-
       <Slot />
     </SafeAreaView>
   );
