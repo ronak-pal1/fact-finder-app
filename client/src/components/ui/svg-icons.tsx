@@ -1,4 +1,4 @@
-import Svg, { Path } from "react-native-svg";
+import Svg, { ClipPath, Defs, G, Path, Rect } from "react-native-svg";
 
 export const LearningIcon = ({
   width,
@@ -213,6 +213,78 @@ export const HttpsIcon = ({
         fill={color || "black"}
         fill-opacity="0.4"
       />
+    </Svg>
+  );
+};
+
+export const BellIcon = ({
+  width,
+  height,
+  color,
+}: {
+  width?: string;
+  height?: string;
+  color?: string;
+}) => {
+  return (
+    <Svg
+      width={width || "22"}
+      height={height || "21"}
+      viewBox="0 0 22 21"
+      fill="none"
+    >
+      <G clip-path="url(#clip0_94_7386)">
+        <Path
+          d="M20.0928 17.4855H2.60352V15.7366H3.47798V9.64241C3.47798 5.28058 7.00208 1.74512 11.3482 1.74512C15.6943 1.74512 19.2184 5.28058 19.2184 9.64241V15.7366H20.0928V17.4855ZM5.22691 15.7366H17.4694V9.64241C17.4694 6.24686 14.7288 3.49405 11.3482 3.49405C7.96748 3.49405 5.22691 6.24686 5.22691 9.64241V15.7366ZM9.162 18.36H13.5343C13.5343 18.9398 13.304 19.4958 12.894 19.9058C12.484 20.3158 11.928 20.5461 11.3482 20.5461C10.7684 20.5461 10.2123 20.3158 9.80232 19.9058C9.39233 19.4958 9.162 18.9398 9.162 18.36Z"
+          fill="black"
+        />
+      </G>
+      <Defs>
+        <ClipPath id="clip0_94_7386">
+          <Rect
+            width="20.9872"
+            height="20.9872"
+            fill="white"
+            transform="translate(0.854492 -0.00390625)"
+          />
+        </ClipPath>
+      </Defs>
+    </Svg>
+  );
+};
+
+export const MenuIcon = ({
+  width,
+  height,
+  color,
+}: {
+  width?: string;
+  height?: string;
+  color?: string;
+}) => {
+  return (
+    <Svg
+      width={width || "21"}
+      height={height || "21"}
+      viewBox="0 0 21 21"
+      fill="none"
+    >
+      <G clip-path="url(#clip0_94_7382)">
+        <Path
+          d="M2.62305 3.49414H18.3634V5.24307H2.62305V3.49414ZM2.62305 9.6154H13.1166V11.3643H2.62305V9.6154ZM2.62305 15.7367H18.3634V17.4856H2.62305V15.7367Z"
+          fill="black"
+        />
+      </G>
+      <Defs>
+        <ClipPath id="clip0_94_7382">
+          <Rect
+            width="20.9872"
+            height="20.9872"
+            fill="white"
+            transform="translate(0 -0.00390625)"
+          />
+        </ClipPath>
+      </Defs>
     </Svg>
   );
 };

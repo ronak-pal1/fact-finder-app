@@ -7,7 +7,7 @@ const Home = () => {
     return (
         <View className="flex-1 bg-white">
 
-            <CustomText className="text-2xl text-center" weight="bold">Home</CustomText>
+            {/* <CustomText className="text-2xl text-center" weight="bold">Home</CustomText> */}
         </View>
     )
 }
