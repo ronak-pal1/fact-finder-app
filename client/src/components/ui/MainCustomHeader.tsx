@@ -2,13 +2,22 @@ import React from "react";
 import { View, TouchableOpacity, Image } from "react-native";
 import { BellIcon, MenuIcon } from "./svg-icons";
 import { DrawerActions } from "@react-navigation/native";
-import { useNavigation } from "expo-router";
+import { useNavigation, usePathname } from "expo-router";
+import Entypo from "@expo/vector-icons/Entypo";
 
 export default function MainCustomHeader() {
   const navigation = useNavigation();
+  const pathname = usePathname();
 
-  const openDrawer = () => {
-    navigation.dispatch(DrawerActions.openDrawer());
+  // Check if we're on the home screen
+  const isHomeScreen = pathname === "/home";
+
+  const handlePress = () => {
+    if (isHomeScreen) {
+      navigation.dispatch(DrawerActions.openDrawer());
+    } else {
+      navigation.goBack();
+    }
   };
 
   return (
@@ -17,13 +26,17 @@ export default function MainCustomHeader() {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        height: 64,
+        paddingVertical: 22,
         paddingHorizontal: 16,
-        backgroundColor: "#fff",
+        backgroundColor: "#F4F4F4",
       }}
     >
-      <TouchableOpacity onPress={openDrawer}>
-        <MenuIcon width="26" height="26" />
+      <TouchableOpacity onPress={handlePress}>
+        {isHomeScreen ? (
+          <MenuIcon width="26" height="26" />
+        ) : (
+          <Entypo name="chevron-small-left" size={30} color="black" />
+        )}
       </TouchableOpacity>
 
       <View
