@@ -3,8 +3,10 @@ import { Image, ScrollView, TouchableOpacity, View } from "react-native";
 import ProgressBar from "@/components/ui/ProgressBar";
 import { TimeIcon } from "@/components/ui/svg-icons";
 import { router } from "expo-router";
+import Svg, { Ellipse } from "react-native-svg";
+import {useNavigation} from "@react-navigation/native";
 
-const ProgressCard = () => {
+export const ProgressCard = () => {
   return (
     <View className="w-full overflow-hidden">
       <View className="w-full bg-[#495ECA] rounded-2xl px-5 py-7">
@@ -25,8 +27,14 @@ const ProgressCard = () => {
 };
 
 const LearningCard = () => {
+    const navigation = useNavigation<any>();
   return (
-    <TouchableOpacity className="overflow-hidden" onPress={() => {router.push("/learning-modules")}}>
+    <TouchableOpacity
+      className="overflow-hidden"
+      onPress={() => {
+        navigation.navigate("learning-modules");
+      }}
+    >
       <View className="rounded-2xl bg-white w-[180px] px-5 py-5 gap-y-5">
         <CustomText className="text-2xl" weight="bold">
           Module 1-Soft skills
@@ -76,6 +84,61 @@ const CourseCard = () => {
         <View className="w-fit flex-row items-center gap-x-2">
           <TimeIcon />
           <CustomText className="text-sm">Module 2</CustomText>
+        </View>
+      </View>
+    </View>
+  );
+};
+
+export const BookMentorSection = () => {
+  return (
+    <View className="px-6">
+      <View className="flex-row items-center gap-x-3">
+        <CustomText className="text-2xl" weight="bold">
+          Book a Mentor
+        </CustomText>
+        <CustomText className="text-xl">(Platinum users only)</CustomText>
+      </View>
+
+      <View className="w-full overflow-hidden my-6 relative ">
+        <View className="absolute top-0 left-0 z-20">
+          <Svg width="171" height="135" viewBox="0 0 171 93" fill="none">
+            <Ellipse
+              cx="59.6406"
+              cy="17.0815"
+              rx="119.212"
+              ry="82.1489"
+              transform="rotate(-30.8093 59.6406 17.0815)"
+              fill="#00AE8F"
+            />
+          </Svg>
+        </View>
+
+        <View className="w-full rounded-2xl bg-[#7B9B75] flex-row items-center gap-x-5 px-3 py-5">
+          <View className="z-30">
+            <Image
+              source={require("@/assets/images/book-a-mentor-img.png")}
+              className="w-[100px] h-[100px]"
+              resizeMode="contain"
+            />
+          </View>
+
+          <View className="gap-y-3 z-30">
+            <CustomText className="text-3xl text-white" weight="bold">
+              Have any querries?
+            </CustomText>
+            <CustomText className="text-xl text-white">
+              Module 5 - Platinum Module
+            </CustomText>
+
+            <View className="overflow-hidden">
+              <View className="rounded-lg bg-[#F36454] w-[180px] items-center py-1">
+                <CustomText className="text-xl text-white">
+                  Book 1 on 1 sesson
+                </CustomText>
+              </View>
+            </View>
+          </View>
         </View>
       </View>
     </View>
@@ -154,38 +217,9 @@ const Home = () => {
           </View>
 
           {/* Book a mentor section */}
-
-          <View className="px-6">
-            <View className="flex-row items-center gap-x-3">
-              <CustomText className="text-2xl" weight="bold">
-                Book a Mentor
-              </CustomText>
-              <CustomText className="text-xl">(Platinum users only)</CustomText>
-            </View>
-
-            <View className="w-full overflow-hidden my-6">
-            {/* <svg xmlns="http://www.w3.org/2000/svg" width="171" height="93" viewBox="0 0 171 93" fill="none">
-  <ellipse cx="59.6406" cy="17.0815" rx="119.212" ry="82.1489" transform="rotate(-30.8093 59.6406 17.0815)" fill="#00AE8F"/>
-</svg> */}
-                <View className="w-full rounded-2xl bg-[#7B9B75] relative flex-row items-center gap-x-5 px-3 py-5">
-                    <View>
-                        <Image source={require("@/assets/images/book-a-mentor-img.png")} className="w-[100px] h-[100px]" resizeMode="contain"/>
-                    </View>
-
-                    <View className="gap-y-3">
-                        <CustomText className="text-3xl text-white" weight="bold">Have any querries?</CustomText>
-                        <CustomText className="text-xl text-white">Module 5 - Platinum Module</CustomText>
-
-                        <View className="overflow-hidden">
-                            <View className="rounded-lg bg-[#F36454] w-[180px] items-center py-1">
-                                <CustomText className="text-xl text-white" >Book 1 on 1 sesson</CustomText>
-                            </View>
-                        </View>
-                    </View>
-                </View>
-            </View>
+          <View className="my-5">
+            <BookMentorSection />
           </View>
-          <View></View>
         </View>
       </ScrollView>
     </View>

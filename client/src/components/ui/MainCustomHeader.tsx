@@ -1,16 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, TouchableOpacity, Image } from "react-native";
 import { BellIcon, MenuIcon } from "./svg-icons";
-import { DrawerActions } from "@react-navigation/native";
-import { useNavigation, usePathname } from "expo-router";
+import { DrawerActions, useNavigation } from "@react-navigation/native";
 import Entypo from "@expo/vector-icons/Entypo";
 
 export default function MainCustomHeader() {
-  const navigation = useNavigation();
-  const pathname = usePathname();
+  const navigation = useNavigation<any>();
 
-  // Check if we're on the home screen
-  const isHomeScreen = pathname === "/home";
+  const isHomeScreen =
+    navigation.getState().routes[0]?.name === "home" ||
+    navigation.getState().routes[0]?.name === "HomeTab";
 
   const handlePress = () => {
     if (isHomeScreen) {
