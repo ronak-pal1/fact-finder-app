@@ -10,8 +10,10 @@
     "deploy": "npx expo export -p web && npx eas-cli@latest deploy"
   },
   "dependencies": {
+    "@expo-google-fonts/anonymous-pro": "^0.4.1",
     "expo": "^54.0.1",
     "expo-constants": "~18.0.8",
+    "expo-font": "~14.0.8",
     "expo-linking": "~8.0.7",
     "expo-router": "~6.0.0",
     "expo-splash-screen": "~31.0.8",

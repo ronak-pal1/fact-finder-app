@@ -11,7 +11,8 @@
       {
         "origin": "https://n"
       }
-    ]
+    ],
+    "expo-font"
   ],
   "name": "fact-finder",
   "slug": "fact-finder"
