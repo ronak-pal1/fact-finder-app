@@ -13,6 +13,7 @@ import SessionBooking from "./(session-booking)/session-booking";
 import ConfirmBooking from "./(session-booking)/confirm-booking";
 import PickDate from "./(session-booking)/pick-date";
 import JoinCall from "./(session-booking)/join-call";
+import WatchLecture from "./watch-lecture";
 
 const Drawer = createDrawerNavigator();
 const Tabs = createBottomTabNavigator();
@@ -35,6 +36,7 @@ function HomeDrawer() {
       <Drawer.Screen name="pick-date" component={PickDate} />
       <Drawer.Screen name="confirm-booking" component={ConfirmBooking} />
       <Drawer.Screen name="join-call" component={JoinCall} />
+      <Drawer.Screen name="watch-lecture" component={WatchLecture} />
     </Drawer.Navigator>
   );
 }

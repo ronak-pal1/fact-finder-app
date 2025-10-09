@@ -1,9 +1,10 @@
-import { Image, ScrollView, Text, View } from "react-native";
+import { Image, ScrollView, Text, View, TouchableOpacity } from "react-native";
 import CustomText from "@/components/ui/CustomText";
 import { StartIcon } from "@/components/ui/svg-icons";
 import { useState } from "react";
 import SwitchTab from "@/components/ui/SwitchTab";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { useNavigation } from "@react-navigation/native";
 
 const LessionCard = ({
   title,
@@ -12,8 +13,10 @@ const LessionCard = ({
   title: string;
   isCurrent?: boolean;
 }) => {
+
+    const navigation = useNavigation<any>();
   return (
-    <View className="flex-row items-center justify-between">
+    <TouchableOpacity onPress={() => {navigation.navigate("watch-lecture")}} className="flex-row items-center justify-between">
       <View className="flex-row items-center gap-x-4">
         <View
           className="w-[32px] h-[32px] rounded-full  items-center justify-center"
@@ -35,7 +38,7 @@ const LessionCard = ({
           02:35
         </CustomText>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
