@@ -3,6 +3,12 @@ import { DrawerContentComponentProps } from "@react-navigation/drawer";
 import { Ionicons } from "@expo/vector-icons";
 import CustomText from "./CustomText";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
+import {
+  Bell2Icon,
+  BookEducationOutlineIcon,
+  CommentsIcon,
+  FaceAgentIcon,
+} from "./svg-icons";
 
 export default function CustomDrawerContent(
   props: DrawerContentComponentProps
@@ -10,15 +16,23 @@ export default function CustomDrawerContent(
   const { navigation } = props;
 
   const menuItems = [
-    { name: "Book a Session", route: "session-booking", icon: "home-outline" },
+    {
+      name: "Book a Session",
+      route: "session-booking",
+      icon: <CommentsIcon />,
+    },
     {
       name: "Switch to Agent",
       route: "learning-modules",
-      icon: "book-outline",
+      icon: <FaceAgentIcon />,
     },
-    { name: "Need Help?", route: "module-screen", icon: "layers-outline" },
-    { name: "Plans", route: "plans", icon: "settings-outline" },
-    { name: "Profile", route: "profile", icon: "person-outline" },
+    { name: "Need Help?", route: "module-screen", icon: <Bell2Icon /> },
+    { name: "Plans", route: "plans", icon: <BookEducationOutlineIcon /> },
+    {
+      name: "Profile",
+      route: "profile",
+      icon: <Ionicons name="person-outline" size={24} color="#6C7072" />,
+    },
   ];
 
   return (
@@ -51,13 +65,8 @@ export default function CustomDrawerContent(
             className="flex-row items-center justify-between px-4 py-4 mb-2"
             onPress={() => navigation.navigate(item.route)}
           >
-            <View className="flex-row items-center">
-              <Ionicons
-                name={item.icon as any}
-                size={22}
-                color="#4B5563"
-                className="mr-4"
-              />
+            <View className="flex-row items-center gap-x-4">
+              {item.icon}
               <Text className="text-gray-700 text-xl">{item.name}</Text>
             </View>
 
