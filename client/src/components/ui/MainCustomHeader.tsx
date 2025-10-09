@@ -4,12 +4,23 @@ import { BellIcon, MenuIcon } from "./svg-icons";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
 import Entypo from "@expo/vector-icons/Entypo";
 
-export default function MainCustomHeader() {
-  const navigation = useNavigation<any>();
+function getActiveRouteName(state: any): string | undefined {
+    if (!state || !state.routes || state.index === undefined) return undefined;
+    const route = state.routes[state.index];
+    // Dive into nested navigators
+    if (route.state) {
+      return getActiveRouteName(route.state);
+    }
+    return route.name;
+  }
+  
 
-  const isHomeScreen =
-    navigation.getState().routes[0]?.name === "home" ||
-    navigation.getState().routes[0]?.name === "HomeTab";
+export default function MainCustomHeader() {
+    const navigation = useNavigation();
+    const state = navigation.getState();
+    const currentRouteName = getActiveRouteName(state);
+    
+    const isHomeScreen = currentRouteName === "home" || currentRouteName === "HomeTab";
 
   const handlePress = () => {
     if (isHomeScreen) {

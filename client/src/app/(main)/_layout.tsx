@@ -7,7 +7,12 @@ import Home from "./home";
 import LearningModules from "./learning-modules";
 import ModuleScreen from "./module-screen";
 import CustomBottomTabs from "@/components/ui/CustomBottomTabs";
-
+import CustomDrawerContent from "@/components/ui/CustomDrawerContent";
+import Plans from "./plans";
+import SessionBooking from "./(session-booking)/session-booking";
+import ConfirmBooking from "./(session-booking)/confirm-booking";
+import PickDate from "./(session-booking)/pick-date";
+import JoinCall from "./(session-booking)/join-call";
 
 const Drawer = createDrawerNavigator();
 const Tabs = createBottomTabNavigator();
@@ -20,10 +25,16 @@ function HomeDrawer() {
         header: () => <MainCustomHeader />,
         drawerStyle: { width: 340 },
       }}
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
       <Drawer.Screen name="home" component={Home} />
       <Drawer.Screen name="module-screen" component={ModuleScreen} />
       <Drawer.Screen name="learning-modules" component={LearningModules} />
+      <Drawer.Screen name="plans" component={Plans} />
+      <Drawer.Screen name="session-booking" component={SessionBooking} />
+      <Drawer.Screen name="pick-date" component={PickDate} />
+      <Drawer.Screen name="confirm-booking" component={ConfirmBooking} />
+      <Drawer.Screen name="join-call" component={JoinCall} />
     </Drawer.Navigator>
   );
 }
