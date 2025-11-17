@@ -2,7 +2,6 @@ import CustomText from "@/components/ui/CustomText";
 import {
   Image,
   ScrollView,
-  StatusBar,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -12,12 +11,24 @@ import Feather from "@expo/vector-icons/Feather";
 import { CallIcon, EmailIcon, HttpsIcon, LocationIcon, PersonIcon, UserTieIcon } from "@/components/ui/svg-icons";
 import { router } from "expo-router";
 import { useNavigation } from "@react-navigation/native";
+import React from "react";
+import { StatusBar as RNStatusBar } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 
 const SignUp = () => {
   const navigation = useNavigation<any>();
+
+  useFocusEffect(
+      React.useCallback(() => {
+          RNStatusBar.setBarStyle('light-content');
+           RNStatusBar.setBackgroundColor('#3B9678');
+          RNStatusBar.setTranslucent(true);
+      }, []),
+    );
+
+
   return (
     <View className="flex-1 bg-[#3B9678] relative">
-      <StatusBar backgroundColor={"#3B9678"} barStyle="light-content" />
 
       <View className="px-5 my-10 relative items-center">
         <Entypo
@@ -109,7 +120,7 @@ const SignUp = () => {
               />
 
               <View>
-                <TouchableOpacity onPress={() => {router.push("/welcome-booking")}} className="overflow-hidden">
+                <TouchableOpacity onPress={() => {router.push("/verification")}} className="overflow-hidden">
                   <View className="border border-[#3B9678] bg-[#3B9678] rounded-2xl w-full py-4 px-5 items-center justify-between flex-row gap-x-4">
                     <CustomText className="text-2xl text-white" weight="bold">
                       Create Account

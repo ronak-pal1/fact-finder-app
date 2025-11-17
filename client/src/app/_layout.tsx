@@ -3,8 +3,11 @@ import { Slot } from "expo-router";
 import { useFonts } from "@expo-google-fonts/anonymous-pro/useFonts";
 import { AnonymousPro_400Regular } from "@expo-google-fonts/anonymous-pro/400Regular";
 import { AnonymousPro_700Bold } from "@expo-google-fonts/anonymous-pro/700Bold";
+import { StatusBar as RNStatusBar, Platform } from "react-native";
+import React, { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StatusBar } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
+import * as NavigationBar from "expo-navigation-bar";
 
 export default function Layout() {
   let [fontsLoaded] = useFonts({
@@ -12,11 +15,18 @@ export default function Layout() {
     AnonymousPro_700Bold,
   });
 
+  useFocusEffect(
+    React.useCallback(() => {
+      RNStatusBar.setBarStyle("dark-content");
+      RNStatusBar.setBackgroundColor("white");
+      RNStatusBar.setTranslucent(true);
+    }, [])
+  );
+
   if (!fontsLoaded) return null;
 
   return (
     <SafeAreaView className="flex-1">
-      <StatusBar backgroundColor={"white"} barStyle="dark-content" />
       <Slot />
     </SafeAreaView>
   );

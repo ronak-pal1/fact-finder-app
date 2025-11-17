@@ -15,8 +15,8 @@ export default function CustomBottomTabs({
   navigation,
 }: BottomTabBarProps) {
   return (
-    <View className="overflow-hidden mx-2 mb-1">
-      <View className="flex-row justify-around py-7 bg-white rounded-3xl">
+    <View className="overflow-hidden mb-1">
+      <View className="flex-row justify-around py-7 bg-white">
         {state.routes.map((route, index) => {
           const isFocused = state.index === index;
           const { options } = descriptors[route.key];

@@ -46,7 +46,7 @@ export default function Layout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Tabs.Navigator
         id={undefined}
-        screenOptions={{ headerShown: false }}
+        screenOptions={{ headerShown: false, tabBarStyle: { backgroundColor: "#FFFFFF"}}}
         tabBar={(props) => <CustomBottomTabs {...props} />}
       >
         <Tabs.Screen name="HomeTab" component={HomeDrawer} options={{ title: "Home" }} />

@@ -1,9 +1,21 @@
 import CustomText from "@/components/ui/CustomText";
 import { LearningIcon, SupportAgentIcon } from "@/components/ui/svg-icons";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { Image, TouchableOpacity, View } from "react-native";
+import { StatusBar as RNStatusBar } from "react-native";
+import React from "react";
 
 const Onboarding1 = () => {
+
+  useFocusEffect(
+      React.useCallback(() => {
+        RNStatusBar.setBarStyle("dark-content");
+        RNStatusBar.setBackgroundColor("white");
+        RNStatusBar.setTranslucent(true);
+      }, [])
+    );
+
+    
   return (
     <View className="flex-1 bg-white relative justify-center">
       <View className="absolute top-0 left-0 flex flex-row px-5 py-3">

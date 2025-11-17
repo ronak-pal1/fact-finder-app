@@ -2,10 +2,22 @@ import { View, Image, TouchableOpacity, Text } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import CustomText from "@/components/ui/CustomText";
 import { router } from "expo-router";
-import { useNavigation } from "@react-navigation/native";
+import React from "react";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { StatusBar as RNStatusBar } from "react-native";
 
 const WelcomeBooking = () => {
   const navigation = useNavigation<any>();
+
+   useFocusEffect(
+        React.useCallback(() => {
+            RNStatusBar.setBarStyle('dark-content');
+             RNStatusBar.setBackgroundColor('#fff');
+            RNStatusBar.setTranslucent(true);
+        }, []),
+      );
+
+
   return (
     <LinearGradient
       colors={["#fff", "#030C1A"]}
