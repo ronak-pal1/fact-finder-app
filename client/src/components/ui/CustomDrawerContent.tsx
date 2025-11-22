@@ -9,11 +9,15 @@ import {
   CommentsIcon,
   FaceAgentIcon,
 } from "./svg-icons";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 export default function CustomDrawerContent(
   props: DrawerContentComponentProps
 ) {
   const { navigation } = props;
+
+  const {learner} = useSelector((state: RootState) => state.auth);
 
   const menuItems = [
     {
@@ -46,7 +50,7 @@ export default function CustomDrawerContent(
           />
           <View className="gap-y-1">
             <CustomText className="text-lg" weight="bold">
-              Ronak Paul
+              {learner?.name || "Ronak Paul"}
             </CustomText>
             <Text className="">Learner</Text>
           </View>

@@ -8,6 +8,8 @@ import React, { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
 import * as NavigationBar from "expo-navigation-bar";
+import { Provider } from "react-redux";
+import { store } from "@/store";
 
 export default function Layout() {
   let [fontsLoaded] = useFonts({
@@ -27,7 +29,9 @@ export default function Layout() {
 
   return (
     <SafeAreaView className="flex-1">
-      <Slot />
+      <Provider store={store}>
+        <Slot />
+      </Provider>
     </SafeAreaView>
   );
 }

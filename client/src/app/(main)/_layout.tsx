@@ -14,6 +14,7 @@ import ConfirmBooking from "./(session-booking)/confirm-booking";
 import PickDate from "./(session-booking)/pick-date";
 import JoinCall from "./(session-booking)/join-call";
 import WatchLecture from "./watch-lecture";
+import Profile from "./profile";
 
 const Drawer = createDrawerNavigator();
 const Tabs = createBottomTabNavigator();
@@ -37,6 +38,7 @@ function HomeDrawer() {
       <Drawer.Screen name="confirm-booking" component={ConfirmBooking} />
       <Drawer.Screen name="join-call" component={JoinCall} />
       <Drawer.Screen name="watch-lecture" component={WatchLecture} />
+      <Drawer.Screen name="profile" component={Profile} />
     </Drawer.Navigator>
   );
 }
@@ -52,7 +54,7 @@ export default function Layout() {
         <Tabs.Screen name="HomeTab" component={HomeDrawer} options={{ title: "Home" }} />
         <Tabs.Screen name="CoursesTab" component={HomeDrawer} options={{ title: "Courses" }} />
         <Tabs.Screen name="ResourcesTab" component={HomeDrawer} options={{ title: "Resources" }} />
-        <Tabs.Screen name="ProfileTab" component={HomeDrawer} options={{ title: "Profile" }} />
+        <Tabs.Screen name="ProfileTab" component={Profile} options={{ title: "Profile" }} />
       </Tabs.Navigator>
     </GestureHandlerRootView>
   );

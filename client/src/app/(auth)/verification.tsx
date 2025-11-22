@@ -1,9 +1,9 @@
-import { useNavigation } from "@react-navigation/native";
-import { Button, Image, Text, TouchableOpacity, View } from "react-native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { BackHandler, Button, Image, Text, TouchableOpacity, View } from "react-native";
 import Entypo from "@expo/vector-icons/Entypo";
 import CustomText from "@/components/ui/CustomText";
 import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { router } from "expo-router";
 
 const CameraComponent = ({ cameraType }: { cameraType: CameraType }) => {
@@ -294,7 +294,7 @@ const VerifyingStep = () => {
   }, []);
 
   return (
-    <View className="w-full h-full flex-1 flex items-center justify-center px-11">
+    <View className="w-full h-full flex-1 flex items-center justify-center px-11 bg-white">
       {isVerified ? (
         <View>
           <Text className="text-4xl font-medium text-[#FDA058]">
@@ -316,9 +316,26 @@ const VerifyingStep = () => {
 };
 
 const Verification = () => {
-  const navigation = useNavigation<any>();
-
   const [currentStep, setCurrentStep] = useState(0);
+
+   useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        if (currentStep > 0) {
+          setCurrentStep(currentStep - 1);
+          return true; // Prevent default back behavior
+        }
+        return false; // Allow default back behavior (exit screen)
+      };
+
+      const subscription = BackHandler.addEventListener(
+        'hardwareBackPress',
+        onBackPress
+      );
+
+      return () => subscription.remove();
+    }, [currentStep])
+  );
 
   if (currentStep === 4) {
     return <VerifyingStep />;

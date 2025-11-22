@@ -2,34 +2,97 @@ import CustomText from "@/components/ui/CustomText";
 import {
   Image,
   ScrollView,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from "react-native";
 import Entypo from "@expo/vector-icons/Entypo";
 import CustomInput from "@/components/ui/CustomInput";
 import Feather from "@expo/vector-icons/Feather";
-import { CallIcon, EmailIcon, HttpsIcon, LocationIcon, PersonIcon, UserTieIcon } from "@/components/ui/svg-icons";
+import {
+  CallIcon,
+  EmailIcon,
+  HttpsIcon,
+  LocationIcon,
+  PersonIcon,
+  UserTieIcon,
+} from "@/components/ui/svg-icons";
 import { router } from "expo-router";
-import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { StatusBar as RNStatusBar } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { registerLearner } from "@/store/slices/authSlice";
+import { AppDispatch } from "@/store";
 
 const SignUp = () => {
-  const navigation = useNavigation<any>();
+  const [fullname, setFullname] = React.useState("ronak");
+  const [companyName, setCompanyName] = React.useState("creative upaay");
+  const [designation, setDesignation] = React.useState("full stack");
+  const [address, setAddress] = React.useState("bilasipara");
+  const [phone, setPhone] = React.useState("9729062626");
+  const [email, setEmail] = React.useState("ronak@gmail.com");
+  const [password, setPassword] = React.useState("ronak1234");
+  const [confirmPassword, setConfirmPassword] = React.useState("ronak1234");
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  const handleRegister = async () => {
+    if (
+      email === "" ||
+      password === "" ||
+      confirmPassword === "" ||
+      fullname === "" ||
+      companyName === "" ||
+      designation === "" ||
+      address === "" ||
+      phone === ""
+    ) {
+      ToastAndroid.showWithGravity(
+        "Please fill all fields",
+        ToastAndroid.LONG,
+        ToastAndroid.CENTER
+      );
+      return;
+    }
+
+    try {
+      const response = await dispatch(
+        registerLearner({
+          name: fullname,
+          email,
+          password,
+          company: companyName,
+          designation,
+          address,
+          phone,
+        })
+      );
+
+      console.log(response.meta)
+
+      if (response.meta.requestStatus === "fulfilled") {
+        router.replace("/verification");
+      }
+    } catch (error) {
+      ToastAndroid.showWithGravity(
+        "Registration failed. Please try again.",
+        ToastAndroid.LONG,
+        ToastAndroid.TOP
+      );
+    }
+  };
 
   useFocusEffect(
-      React.useCallback(() => {
-          RNStatusBar.setBarStyle('light-content');
-           RNStatusBar.setBackgroundColor('#3B9678');
-          RNStatusBar.setTranslucent(true);
-      }, []),
-    );
-
+    React.useCallback(() => {
+      RNStatusBar.setBarStyle("light-content");
+      RNStatusBar.setBackgroundColor("#3B9678");
+      RNStatusBar.setTranslucent(true);
+    }, [])
+  );
 
   return (
     <View className="flex-1 bg-[#3B9678] relative">
-
       <View className="px-5 my-10 relative items-center">
         <Entypo
           name="chevron-small-left"
@@ -68,59 +131,62 @@ const SignUp = () => {
               <CustomInput
                 Icon={PersonIcon}
                 placeholder="Enter your full name"
-                value=""
-                onChangeText={() => {}}
+                value={fullname}
+                onChangeText={setFullname}
               />
               <CustomInput
                 Icon={UserTieIcon}
                 placeholder="Agency/Company (Optional)"
-                value=""
-                onChangeText={() => {}}
+                value={companyName}
+                onChangeText={setCompanyName}
               />
               <CustomInput
                 Icon={PersonIcon}
                 placeholder="Designation"
-                value=""
-                onChangeText={() => {}}
+                value={designation}
+                onChangeText={setDesignation}
               />
 
               <CustomInput
                 Icon={LocationIcon}
                 placeholder="Address"
-                value=""
-                onChangeText={() => {}}
+                value={address}
+                onChangeText={setAddress}
               />
 
               <CustomInput
                 Icon={CallIcon}
                 placeholder="Mobile Number"
-                value=""
-                onChangeText={() => {}}
+                value={phone}
+                onChangeText={setPhone}
               />
 
               <CustomInput
                 Icon={EmailIcon}
-                    placeholder="Email"
-                value=""
-                onChangeText={() => {}}
+                placeholder="Email"
+                value={email}
+                onChangeText={setEmail}
               />
 
               <CustomInput
                 Icon={HttpsIcon}
                 placeholder="Enter password"
-                value=""
-                onChangeText={() => {}}
+                value={password}
+                onChangeText={setPassword}
               />
 
               <CustomInput
                 Icon={HttpsIcon}
                 placeholder="Enter confirm password"
-                value=""
-                onChangeText={() => {}}
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
               />
 
               <View>
-                <TouchableOpacity onPress={() => {router.push("/verification")}} className="overflow-hidden">
+                <TouchableOpacity
+                  onPress={handleRegister}
+                  className="overflow-hidden"
+                >
                   <View className="border border-[#3B9678] bg-[#3B9678] rounded-2xl w-full py-4 px-5 items-center justify-between flex-row gap-x-4">
                     <CustomText className="text-2xl text-white" weight="bold">
                       Create Account
@@ -135,6 +201,7 @@ const SignUp = () => {
                     <CustomText className="text-xl">
                       Already have an account?{" "}
                       <CustomText
+                      onPress={() => {router.push("/signin");}}
                         className="text-[#3B9678] text-xl"
                         weight="bold"
                       >
