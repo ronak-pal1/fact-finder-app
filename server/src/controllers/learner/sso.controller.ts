@@ -61,7 +61,7 @@ export const googleAuth = asyncHandler(async (req: Request, res: Response) => {
       password: "",
       designation: "",
       address: "",
-      number: "",
+      phone: "",
       company:"",
       otp:"",
       tlsi:"",

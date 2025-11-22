@@ -40,14 +40,14 @@ export const authenticate = async (
 
     // Get learner from database
     const params = {
-      TableName: "Learners",
+      TableName: "learners",
       Key: marshall({ id: decoded.id }),
     };
 
     const { Item } = await ddb.send(new GetItemCommand(params));
 
     if (!Item) {
-      return res.status(401).json({ message: "Leaner not found" });
+      return res.status(401).json({ message: "Learner not found" });
     }
 
     // Attach learner to request object

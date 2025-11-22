@@ -4,7 +4,7 @@ export interface Learner {
   company?: string;
   designation: string;
   address: string;
-  number: string;
+  phone: string;
   email: string;
   password: string;
   role: string;

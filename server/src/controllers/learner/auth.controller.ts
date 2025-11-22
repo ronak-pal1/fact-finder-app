@@ -25,12 +25,11 @@ const ACCESS_TOKEN_EXPIRES_IN = 15 * 60; // 15 minutes
 // @route   POST /api/v1/learner/register
 // @access  Public
 export const register = asyncHandler(async (req: Request, res: Response) => {
-  const { name, company, designation, address, number,  email, password } = req.body;
-
+  const { name, company, designation, address, phone,  email, password } = req.body;
 
   // Check if learner exists
   const checkUserParams = {
-    TableName: "Learners",
+    TableName: "learners",
     IndexName: "email-index", // Assuming you have a GSI on email
     KeyConditionExpression: "email = :email",
     ExpressionAttributeValues: marshall({
@@ -42,7 +41,7 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
 
   if (Items && Items.length > 0) {
     res.status(400);
-    throw new Error("Leaner already exists");
+    throw new Error("Learner with this email already exists");
   }
 
   // Hash password
@@ -54,13 +53,15 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
   const tlsi = generateTlsi();
   const otp = generateOtp();
 
+  const { accessToken, refreshToken } = generateAuthTokens(learnerId);
+
   const learner = {
     id: learnerId,
     name,
     company,
     designation,
     address,
-    number,
+    phone,
     email,
     otp,
     tlsi,
@@ -68,17 +69,19 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
     role: "learner",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+    accessToken,
+    refreshToken
   };
 
   const params = {
-    TableName: "Learners",
+    TableName: "learners",
     Item: marshall(learner),
   };
 
   await ddb.send(new PutItemCommand(params));
 
 
-  await sendOtpEmail(email, otp, "Your OTP for registering to Fact Finder App is " + otp, name.split(" ")[0]);
+  // await sendOtpEmail(email, otp, "Your OTP for registering to Fact Finder App is " + otp, name.split(" ")[0]);
 
   // Remove sensitive data from response
   const { password: learnerPassword, ...learnerWithoutPassword } = learner as Learner;
@@ -87,6 +90,8 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
     ...learnerWithoutPassword,
     tlsi,
     expiresIn: ACCESS_TOKEN_EXPIRES_IN,
+    accessToken,
+    refreshToken,
   });
 });
 
@@ -98,7 +103,7 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 
   // Find learner by email
   const params = {
-    TableName: "Learners",
+    TableName: "learners",
     IndexName: "email-index",
     KeyConditionExpression: "email = :email",
     ExpressionAttributeValues: marshall({
@@ -126,25 +131,30 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
   // Generate tokens
   const otp = generateOtp();
   const tlsi = generateTlsi();
+  const { accessToken, refreshToken } = generateAuthTokens(learner.id);
 
   // Update refresh token in database
   const updateParams = {
-    TableName: "Learners",
+    TableName: "learners",
     Key: marshall({ id: learner.id }),
-    UpdateExpression: "SET #otp = :otp, #tlsi = :tlsi",
+    UpdateExpression: "SET #otp = :otp, #tlsi = :tlsi, #accessToken = :accessToken, #refreshToken = :refreshToken",
     ExpressionAttributeNames: {
       "#otp": "otp",
       "#tlsi": "tlsi",
+      "#accessToken": "accessToken",
+      "#refreshToken": "refreshToken",
     },
     ExpressionAttributeValues: marshall({
       ":otp": otp,
       ":tlsi": tlsi,
+      ":accessToken": accessToken,
+      ":refreshToken": refreshToken,
     }),
   };
 
   await ddb.send(new UpdateItemCommand(updateParams));
 
-  await sendOtpEmail(email, otp, "Your OTP for logging in to Aries fitness app is " + otp, learner.name.split(" ")[0]);
+  // await sendOtpEmail(email, otp, "Your OTP for logging in to Aries fitness app is " + otp, learner.name.split(" ")[0]);
 
   // Remove sensitive data from response
   const { password: learnerPassword, ...learnerWithoutPassword } = learner;
@@ -153,6 +163,8 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
     ...learnerWithoutPassword,
     tlsi,
     expiresIn: ACCESS_TOKEN_EXPIRES_IN,
+    accessToken,
+    refreshToken,
   });
 });
 
@@ -180,7 +192,7 @@ export const refreshToken = asyncHandler(
       // Get learner from database
       const result = (await ddb.send(
         new QueryCommand({
-          TableName: "Learners",
+          TableName: "learners",
           IndexName: "id-index",
           KeyConditionExpression: "id = :id",
           ExpressionAttributeValues: marshall({
@@ -208,7 +220,7 @@ export const refreshToken = asyncHandler(
 
       // Update refresh token in database
       const updateParams = {
-        TableName: "Learners",
+        TableName: "learners",
         Key: marshall({ id: learner.id }),
         UpdateExpression:
           "SET updatedAt = :updatedAt, otp = :otp, tlsi = :tlsi",
@@ -258,7 +270,7 @@ export const verifyOtp = asyncHandler(async (req: Request, res: Response) => {
 
   // Find learner by email
   const params = {
-    TableName: "Learners",
+    TableName: "learners",
     IndexName: "email-index",
     KeyConditionExpression: "email = :email",
     ExpressionAttributeValues: marshall({
@@ -293,7 +305,7 @@ export const verifyOtp = asyncHandler(async (req: Request, res: Response) => {
 
   // Update refresh token in database
   const updateParams = {
-    TableName: "Learners",
+    TableName: "learners",
     Key: marshall({ id: learner.id }),
     UpdateExpression:
       "SET refreshToken = :refreshToken, updatedAt = :updatedAt, otp = :otp, tlsi = :tlsi",
@@ -323,7 +335,7 @@ export const resendOtp = asyncHandler(async (req: Request, res: Response) => {
 
   // Find learner by email
   const params = {
-    TableName: "Learners",
+    TableName: "learners",
     IndexName: "email-index",
     KeyConditionExpression: "email = :email",
     ExpressionAttributeValues: marshall({
@@ -355,7 +367,7 @@ export const resendOtp = asyncHandler(async (req: Request, res: Response) => {
 
   // Update refresh token in database
   const updateParams = {
-    TableName: "Learners",
+    TableName: "learners",
     Key: marshall({ id: learner.id }),
     UpdateExpression:
       "SET otp = :otp, tlsi = :tlsi",
