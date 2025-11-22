@@ -30,7 +30,8 @@
         "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
         "recordAudioAndroid": false
       }
-    ]
+    ],
+    "expo-secure-store"
   ],
   "name": "fact-finder",
   "slug": "fact-finder",
