@@ -6,6 +6,17 @@ if (dotenv.config().error) {
 }
 
 export const config = {
+  aws: {
+    REGION: process.env.AWS_REGION,
+    ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+    SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+  },
+  google: {
+    CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+  },
+  resend: {
+    API_KEY: process.env.RESEND_API_KEY,
+  },
   JWT_SECRET: process.env.JWT_SECRET,
   PORT: process.env.PORT || 8000,
   ENV: process.env.NODE_ENV || 'development',
