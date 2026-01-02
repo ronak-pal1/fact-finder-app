@@ -345,6 +345,11 @@ const Verification = () => {
     <View className="flex-1 bg-[#3B9678] relative">
       <View className="px-5 my-10 relative items-center">
         <Entypo
+        onPress={() => {
+          if (currentStep > 0) {
+            setCurrentStep((prev) => prev - 1);
+          }
+        }}
           name="chevron-small-left"
           className="absolute left-5"
           size={30}

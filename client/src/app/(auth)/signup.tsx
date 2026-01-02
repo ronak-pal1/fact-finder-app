@@ -26,14 +26,14 @@ import { registerLearner } from "@/store/slices/authSlice";
 import { AppDispatch } from "@/store";
 
 const SignUp = () => {
-  const [fullname, setFullname] = React.useState("ronak");
-  const [companyName, setCompanyName] = React.useState("creative upaay");
-  const [designation, setDesignation] = React.useState("full stack");
-  const [address, setAddress] = React.useState("bilasipara");
-  const [phone, setPhone] = React.useState("9729062626");
-  const [email, setEmail] = React.useState("ronak@gmail.com");
-  const [password, setPassword] = React.useState("ronak1234");
-  const [confirmPassword, setConfirmPassword] = React.useState("ronak1234");
+  const [fullname, setFullname] = React.useState("");
+  const [companyName, setCompanyName] = React.useState("");
+  const [designation, setDesignation] = React.useState("");
+  const [address, setAddress] = React.useState("");
+  const [phone, setPhone] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [confirmPassword, setConfirmPassword] = React.useState("");
 
   const dispatch = useDispatch<AppDispatch>();
 

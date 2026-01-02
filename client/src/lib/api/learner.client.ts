@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as SecureStore from 'expo-secure-store';
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL;
+const API_URL = process.env.EXPO_PUBLIC_API_URL || 'https://factfinderbe.ronakpaul.com/api/v1';
 
 // Types
 export interface AuthTokens {
