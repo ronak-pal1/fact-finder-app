@@ -7,6 +7,8 @@ import Courses from './pages/Courses'
 import AddCourse from './pages/AddCourse'
 import Videos from './pages/Videos'
 import Bookings from './pages/Bookings'
+import Users from './pages/Users'
+import KYCVerification from './pages/KYCVerification'
 
 function App() {
 
@@ -24,6 +26,8 @@ function App() {
             <Route path='/courses/add' element={<AddCourse />} />
             <Route path='/videos' element={<Videos />} />
             <Route path='/bookings' element={<Bookings />} />
+            <Route path='/users' element={<Users />} />
+            <Route path='/users/:userId/kyc' element={<KYCVerification />} />
           </Route>
         </Route>
       </Routes>

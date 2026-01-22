@@ -8,6 +8,11 @@ const sidebarLinks = [
         icon: <FiHome size={20} />,
     },
     {
+        title: "Users",
+        path: "/users",
+        icon: <FiUsers size={20} />,
+    },
+    {
         title: "Courses",
         path: "/courses",
         icon: <FiBook size={20} />,
