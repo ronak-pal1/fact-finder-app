@@ -1,0 +1,46 @@
+name: Deploy Frontend to Cloudflare Pages
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  deployments: write
+
+jobs:
+  deploy-client:
+    runs-on: ubuntu-latest
+
+    # Only run if commit message contains 'DEPLOY CLIENT'
+    if: contains(github.event.head_commit.message, 'DEPLOY CLIENT')
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies and build
+        working-directory: client
+        env:
+          VITE_BACKEND_BASE_URL: ${{ secrets.VITE_BACKEND_BASE_URL }}
+          VITE_ENV: ${{ secrets.VITE_ENV }}
+        run: |
+          set -euo pipefail
+          npm ci
+          npm run build
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy ./client/dist --project-name=${{ secrets.CF_PAGES_PROJECT_NAME }}
+          # gitHubToken: ${{ secrets.GITHUB_TOKEN }}
