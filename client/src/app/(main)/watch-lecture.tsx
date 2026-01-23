@@ -4,8 +4,26 @@ import CustomText from "@/components/ui/CustomText";
 import * as ScreenOrientation from "expo-screen-orientation";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
+import { useState, useCallback } from "react";
+import { useFocusEffect } from "expo-router";
 
 const WatchLecture = () => {
+  const [isPlaying, setIsPlaying] = useState(true);
+
+  useFocusEffect(
+    useCallback(() => {
+      // Optional: Auto-play when focused? 
+      // For now, we only ensure it stops when navigating away.
+      // If we want it to resume when coming back, we could set setIsPlaying(true) here.
+      // However, typical behavior for "back" is just stop. 
+      // If user tabs back, maybe resume? Let's stick to just stop on blur for now as requested "pause if there is change in screen".
+
+      return () => {
+        setIsPlaying(false);
+      };
+    }, [])
+  );
+
   const handleFullscreenUpdate = async ({ fullscreenUpdate }) => {
     if (fullscreenUpdate === VideoFullscreenUpdate.PLAYER_DID_PRESENT) {
       // User entered fullscreen → lock to landscape
@@ -26,7 +44,7 @@ const WatchLecture = () => {
           source={{ uri: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }}
           style={{ width: "100%", height: 200 }}
           resizeMode={ResizeMode.COVER}
-          shouldPlay
+          shouldPlay={isPlaying}
           isLooping
           onFullscreenUpdate={handleFullscreenUpdate}
           useNativeControls
