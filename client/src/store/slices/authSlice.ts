@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import * as SecureStore from "expo-secure-store";
-import { learnerApiClient } from "../../lib/api/learner.client";
+import { authService } from "../../lib/services/learner/auth.service";
 
 export interface Learner {
   id: string;
@@ -39,43 +39,51 @@ export const registerLearner = createAsyncThunk(
       designation,
       address,
       phone,
-    }: { name: string; email: string; password: string; company: string; designation: string; address: string; phone: string },
-    thunkAPI
+    }: {
+      name: string;
+      email: string;
+      password: string;
+      company: string;
+      designation: string;
+      address: string;
+      phone: string;
+    },
+    thunkAPI,
   ) => {
     try {
-      const response = await learnerApiClient.register(
+      const response = await authService.register(
         name,
         company,
         email,
         password,
         designation,
         address,
-        phone
+        phone,
       );
       const { ...learner } = response;
 
-      console.log(response)
+      console.log(response);
 
       await SecureStore.setItemAsync("learner", JSON.stringify(learner));
 
       return { learner };
     } catch (error: any) {
-      console.log(error)
+      console.log(error);
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || error.message
+        error.response?.data?.message || error.message,
       );
     }
-  }
+  },
 );
 
 export const loginLearner = createAsyncThunk(
   "learner/login",
   async (
     { email, password }: { email: string; password: string },
-    thunkAPI
+    thunkAPI,
   ) => {
     try {
-      const response = await learnerApiClient.login(email, password);
+      const response = await authService.login(email, password);
       const { accessToken, refreshToken, ...learner } = response;
 
       await SecureStore.setItemAsync("learner", JSON.stringify(learner));
@@ -83,53 +91,53 @@ export const loginLearner = createAsyncThunk(
       return { learner, accessToken, refreshToken };
     } catch (error: any) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || error.message
+        error.response?.data?.message || error.message,
       );
     }
-  }
+  },
 );
 
 export const logoutLearner = createAsyncThunk(
   "learner/logout",
   async (_, thunkAPI) => {
     try {
-      await learnerApiClient.logout();
+      await authService.logout();
       await SecureStore.deleteItemAsync("learner");
       return true;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 export const verifyOtp = createAsyncThunk(
   "learner/verify-otp",
   async ({ email, otp }: { email: string; otp: string }, thunkAPI) => {
     try {
-      const response = await learnerApiClient.verifyOtp(email, otp);
+      const response = await authService.verifyOtp(email, otp);
       const { accessToken, refreshToken } = response;
 
       return { accessToken, refreshToken };
     } catch (error: any) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || error.message
+        error.response?.data?.message || error.message,
       );
     }
-  }
+  },
 );
 
 export const resendOtp = createAsyncThunk(
   "learner/resend-otp",
   async ({ email }: { email: string }, thunkAPI) => {
     try {
-      const response = await learnerApiClient.resendOtp(email);
+      const response = await authService.resendOtp(email);
       return response;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || error.message
+        error.response?.data?.message || error.message,
       );
     }
-  }
+  },
 );
 
 const authSlice = createSlice({
@@ -142,7 +150,7 @@ const authSlice = createSlice({
         learner: Learner;
         accessToken: string;
         refreshToken: string;
-      }>
+      }>,
     ) => {
       state.learner = action.payload.learner;
       state.accessToken = action.payload.accessToken;

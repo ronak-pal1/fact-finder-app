@@ -18,7 +18,7 @@ export const uploadToS3 = async (
   const fileName = `${folder}/${uuidv4()}.${fileExtension}`;
 
   const params = {
-    Bucket: process.env.AWS_S3_BUCKET_NAME,
+    Bucket: config.aws.AWS_S3_BUCKET_NAME,
     Key: fileName,
     Body: file.buffer,
     ContentType: file.mimetype,
@@ -29,10 +29,7 @@ export const uploadToS3 = async (
     const command = new PutObjectCommand(params);
     await s3Client.send(command);
 
-    // Return Public URL (Constructed manually to avoid calling GetObject or signing every time if bucket is public)
-    // If bucket is private, we should use getSignedUrl from @aws-sdk/s3-request-presigner
-    // Assumption: Public read bucket for assets
-    return `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${config.aws.REGION}.amazonaws.com/${fileName}`;
+    return `https://${config.aws.AWS_S3_BUCKET_NAME}.s3.${config.aws.REGION}.amazonaws.com/${fileName}`;
   } catch (error) {
     console.error("S3 Upload Error:", error);
     throw new Error("File upload failed");
