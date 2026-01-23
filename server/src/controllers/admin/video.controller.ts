@@ -8,25 +8,27 @@ import {
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import asyncHandler from "../../utils/asyncHandler";
 import { ddb } from "../../db/connect.db";
+import { uploadToS3 } from "../../utils/s3.util";
 
-// @desc    Upload video (Metadata only + file handling mockup)
+// @desc    Upload video
 // @route   POST /api/v1/admin/videos/upload
 // @access  Private/Admin
 export const uploadVideo = asyncHandler(async (req: Request, res: Response) => {
-  // In a real app, this would use multer-s3 or handle file stream to S3
-  // Here we'll assume the file middleware processed it or we just create an entry
+  if (!req.file) {
+    res.status(400);
+    throw new Error("No video file uploaded");
+  }
 
-  // If using multer, req.file would exist.
-  // Assuming for this task we just simulating metadata creation or receiving a URL
-  const { title, url, duration } = req.body; // or req.file location
+  const { title, duration } = req.body;
 
-  // If actual file upload is needed, we'd need 'multer'. I'll assume standard metadata creation for now.
+  // Upload to S3
+  const url = await uploadToS3(req.file, "videos");
 
   const id = uuidv4();
   const video = {
     id,
     title: title || "Untitled Video",
-    url: url || "", // S3 URL would go here
+    url: url,
     duration: duration || "0:00",
     uploadedAt: new Date().toISOString(),
   };

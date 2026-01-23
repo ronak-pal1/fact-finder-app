@@ -26,6 +26,7 @@ import {
 } from "../../../controllers/admin/user.controller";
 import { getAllBookings } from "../../../controllers/admin/booking.controller";
 import { getDashboardStats } from "../../../controllers/admin/stats.controller";
+import { upload } from "../../../utils/multer.util";
 
 const router = Router();
 
@@ -37,8 +38,8 @@ router.post("/create", createAdmin); // Seeding
 // Course Routes
 router.get("/courses", getAllCourses);
 router.get("/courses/:id", getCourseById);
-router.post("/courses", createCourse);
-router.put("/courses/:id", updateCourse);
+router.post("/courses", upload.single("thumbnail"), createCourse); // Added thumbnail upload
+router.put("/courses/:id", updateCourse); // Can also add upload here if updating thumbnail
 router.delete("/courses/:id", deleteCourse);
 router.post("/courses/:courseId/sections", addSection);
 
@@ -47,7 +48,7 @@ router.post("/courses/:courseId/sections", addSection);
 router.post("/courses/:courseId/sections/:sectionId/videos", addVideoToSection);
 
 // Video Routes (Library)
-router.post("/videos/upload", uploadVideo);
+router.post("/videos/upload", upload.single("video"), uploadVideo); // Added video file upload
 router.get("/videos", getAllVideos);
 router.delete("/videos/:id", deleteVideo);
 

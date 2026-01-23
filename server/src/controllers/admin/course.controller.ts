@@ -10,6 +10,7 @@ import {
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import asyncHandler from "../../utils/asyncHandler";
 import { ddb } from "../../db/connect.db";
+import { uploadToS3 } from "../../utils/s3.util";
 
 // @desc    Get all courses
 // @route   GET /api/v1/admin/courses
@@ -57,7 +58,14 @@ export const getCourseById = asyncHandler(
 // @access  Private/Admin
 export const createCourse = asyncHandler(
   async (req: Request, res: Response) => {
-    const { title, price, description, thumbnail } = req.body;
+    const { title, price, description } = req.body;
+    let thumbnail = req.body.thumbnail;
+
+    // Handle thumbnail upload if file is present
+    if (req.file) {
+      thumbnail = await uploadToS3(req.file, "course-thumbnails");
+    }
+
     const id = uuidv4();
 
     const course = {
@@ -65,7 +73,7 @@ export const createCourse = asyncHandler(
       title,
       price,
       description,
-      thumbnail, // URL or key
+      thumbnail: thumbnail || "",
       sections: [], // Initialize empty sections
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -89,9 +97,6 @@ export const updateCourse = asyncHandler(
   async (req: Request, res: Response) => {
     const { id } = req.params;
     const { title, price, description, thumbnail } = req.body;
-
-    // Simple update using UpdateItem probably better, but for full object replacement PutItem is easier if we had all data.
-    // Using UpdateItem for partial updates
 
     // Construct UpdateExpression dynamically based on provided fields
     let updateExpression = "SET updatedAt = :updatedAt";
@@ -162,8 +167,6 @@ export const addSection = asyncHandler(async (req: Request, res: Response) => {
     videos: [],
   };
 
-  // Append to list of sections
-  // Note: DynamoDB list_append needs initialized list
   const params = {
     TableName: "courses",
     Key: marshall({ id: courseId }),
@@ -183,15 +186,8 @@ export const addSection = asyncHandler(async (req: Request, res: Response) => {
 // @desc    Add video to section
 // @route   POST /api/v1/admin/sections/:sectionId/videos
 // @access  Private/Admin
-// Note: This is tricky in DynamoDB nested lists.
-// A better schema might be separate Sections table, but given the prompt implied standard relational or document nesting:
-// We need to know which course the section belongs to, OR traverse courses to find it.
-// Assuming for now the frontend passes courseId too, or we have a flat structure.
-// Standard Single Table Design would separate them.
-// For simplicity given generic "DynamoDB" usage, I'll assume we pass `courseId` in body or query, or I'll implement a scan to find it (inefficient) or CHANGE the API to include courseId in route: /courses/:courseId/sections/:sectionId/videos
 export const addVideoToSection = asyncHandler(
   async (req: Request, res: Response) => {
-    // If route is /api/v1/admin/courses/:courseId/sections/:sectionId/videos
     const { courseId, sectionId } = req.params;
     const { title, videoUrl, duration } = req.body;
 
@@ -224,8 +220,6 @@ export const addVideoToSection = asyncHandler(
       duration,
     };
 
-    // Update specific index
-    // DynamoDB allows SET sections[1].videos = list_append(...)
     const params = {
       TableName: "courses",
       Key: marshall({ id: courseId }),
